@@ -14,30 +14,39 @@ const gallery = galleryItems
 </div>`,
   )
   .join('');
+
 galleryWrapper.innerHTML = gallery;
+
+let instance = {};
 
 galleryWrapper.addEventListener('click', event => {
   if (event.target.className !== 'gallery__image') {
     return;
   }
   event.preventDefault();
+  instance = createModal(event);
+  instance.show();
+});
 
+function createModal(ev) {
   const instance = basicLightbox.create(
     `
       <div class="modal">
-          <img src="${event.target.dataset.source}"> </div>
+          <img src="${ev.target.dataset.source}"> </div>
      `,
     {
       onShow: instance => {
         instance.element().onclick = instance.close;
+        document.addEventListener('keydown', closeModal);
       },
+      onClose: document.removeEventListener('keydown', closeModal),
     },
   );
+  return instance;
+}
 
-  instance.show();
-});
-
-document.addEventListener('keydown', event => {
-  console.log('key: ', event.key);
-  console.log('code: ', event.code);
-});
+function closeModal(event) {
+  if (event.code.toLowerCase() === 'escape') {
+    instance.close();
+  }
+}
