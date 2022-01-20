@@ -21,4 +21,23 @@ galleryWrapper.addEventListener('click', event => {
     return;
   }
   event.preventDefault();
+
+  const instance = basicLightbox.create(
+    `
+      <div class="modal">
+          <img src="${event.target.dataset.source}"> </div>
+     `,
+    {
+      onShow: instance => {
+        instance.element().onclick = instance.close;
+      },
+    },
+  );
+
+  instance.show();
+});
+
+document.addEventListener('keydown', event => {
+  console.log('key: ', event.key);
+  console.log('code: ', event.code);
 });
