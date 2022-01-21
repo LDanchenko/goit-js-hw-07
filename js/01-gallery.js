@@ -17,31 +17,27 @@ const gallery = galleryItems
 
 galleryWrapper.innerHTML = gallery;
 
-let instance = {};
+const instance = createModal();
 
 galleryWrapper.addEventListener('click', event => {
   if (event.target.className !== 'gallery__image') {
     return;
   }
   event.preventDefault();
-  instance = createModal(event);
+  instance.element().innerHTML = ` <div class="modal">
+ <img src="${event.target.dataset.source}"  alt="${event.target.alt}">
+ </div>`;
   instance.show();
 });
 
-function createModal(ev) {
-  const instance = basicLightbox.create(
-    `
-      <div class="modal">
-          <img src="${ev.target.dataset.source}"> </div>
-     `,
-    {
-      onShow: instance => {
-        instance.element().onclick = instance.close;
-        document.addEventListener('keydown', closeModal);
-      },
-      onClose: document.removeEventListener('keydown', closeModal),
+function createModal() {
+  const instance = basicLightbox.create(``, {
+    onShow: instance => {
+      instance.element().onclick = instance.close;
+      document.addEventListener('keydown', closeModal);
     },
-  );
+    onClose: document.removeEventListener('keydown', closeModal),
+  });
   return instance;
 }
 
